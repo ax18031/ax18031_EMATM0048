@@ -39,9 +39,9 @@ class customer_account:
         else:
             self.balance -= withdraw_funds
             print('Withdrawal successful! Your balance is now ' + str(self.balance)+'.')
-        
+    def balance(self):
+        return self.balance
         
         
  
-my_name = customer_account('Jack','64 Moss Road',17000,1701101,9988)
-my_name.withdraw()    
+  
