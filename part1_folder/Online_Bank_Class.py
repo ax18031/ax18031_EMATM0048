@@ -17,4 +17,5 @@ class online_bank(customer_account):
         super().__init__(name,age,gender,address,balance,account_number,PIN)
     def logout(self):
         print('Logged out successfully!')
-    def process_transfer(self,)
+    def process_transfer(self):
+        

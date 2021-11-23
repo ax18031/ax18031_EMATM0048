@@ -19,11 +19,11 @@ class customer_account():
         self.name = name
         self.age = age
         self.address = address
-        self.balance = balance
-        self.account_number = account_number
-        self.PIN = PIN
+        self.balance = float(balance)
+        self.account_number = int(account_number)
+        self.PIN = int(PIN)
     def login(self,account_num,PIN_num):
-        if account_num != self.account_number or PIN_num != self.PIN:
+        if self.account_number!= account_num  or self.PIN != PIN_num:
             print('Incorrect account number or PIN. Please try again.')
         else:
             print('Successfully logged in!')
@@ -47,6 +47,9 @@ class customer_account():
             print('Insufficient funds to withdraw. Please try again!')
         else:
             print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+    def check_balance(self):
+        print('Your balance is: £',self.balance)
+        
             
       
             
