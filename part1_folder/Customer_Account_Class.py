@@ -9,38 +9,48 @@ This file contains the customer account class. This class contains information
 about the customer such as name, address, etc... This class can:
 
 Login to the bank system, account number and PIN
-Transfer money from their account to another valid account
+Transfer funds from their account to another valid account (up to £1000)
 Deposit funds
 Withdraw Funds
 """
-class customer_account:
+class customer_account():
     """this class contains information about the customer"""
-    def __init__(self,name,address,balance,account_number,PIN):
+    def __init__(self,name,age,address,balance,account_number,PIN):
         self.name = name
+        self.age = age
         self.address = address
         self.balance = balance
         self.account_number = account_number
         self.PIN = PIN
-    def login(self):
-        value2 = int(input('Enter Account Number...' ))
-        value3 = int(input('Enter PIN Number...' ))
-        if value2 != self.account_number or value3 != self.PIN:
+    def login(self,account_num,PIN_num):
+        if account_num != self.account_number or PIN_num != self.PIN:
             print('Incorrect account number or PIN. Please try again.')
         else:
             print('Successfully logged in!')
-    def deposit(self):
-        deposit_funds=float(input('Amount you would like to deposit...'))
-        self.balance += deposit_funds
-        print('Your new balance is ' + str(self.balance))
-    def withdraw(self):
-        withdraw_funds = float(input('Amount you would like to withdraw' ))
-        if self.balance<withdraw_funds:
+    def deposit(self,deposit_funds):
+        self.deposit_funds = deposit_funds
+        self.balance += self.deposit_funds
+        print('Your new balance is £', self.balance)
+    def withdraw(self,withdraw_funds):
+        self.withdraw_funds = withdraw_funds
+        if self.balance< withdraw_funds:
             print('Insufficient funds to withdraw. Please try again!')
         else:
-            self.balance -= withdraw_funds
-            print('Withdrawal successful! Your balance is now ' + str(self.balance)+'.')
-    def balance(self):
-        return self.balance
+            self.balance -= self.withdraw_funds
+            print('Withdrawal successful! Your balance is now £' , self.balance, '.')
+    def transfer(self,sender,receiver, transfer_funds):
+        if transfer_funds < 1000 and self.balance>transfer_funds:
+            sender.withdraw(transfer_funds)
+            receiver.deposit(transfer_funds)
+            print('Transfer successful! Your balance is now £', self.balance , '.')
+        elif self.balance < transfer_funds:
+            print('Insufficient funds to withdraw. Please try again!')
+        else:
+            print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+            
+      
+            
+
         
         
  
