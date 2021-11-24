@@ -22,7 +22,9 @@ class customer_account():
         self.balance = float(balance)
         self.account_number = int(account_number)
         self.PIN = int(PIN)
-    def login(self,account_num,PIN_num):
+    def login(self):
+        account_num= int(input('Enter your account number: '))
+        PIN_num= int(input('Enter your PIN number: '))
         if self.account_number!= account_num  or self.PIN != PIN_num:
             print('Incorrect account number or PIN. Please try again.')
         else:
