@@ -9,14 +9,22 @@ This file is to run the classes that I have implemented.
 from Customer_Account_Class import customer_account
 from Online_Bank_Class import online_bank
 
+accounts_dict={} 
 def main():
+    def create_account():
+        name = input('Enter your full name: ')
+        age = int(input('Enter your age: '))
+        address = input('Enter your address: ')
+        balance = float(input('Enter your current balance: '))
+        PIN = int(input('Enter your 4 digit PIN: '))
+        customer= customer_account(name=name,age=age,address=address,balance=balance,PIN=PIN)
+        accounts_dict[customer.account]=customer
+        print('Account successfully created! Your account number is ', customer.account_number)
     while True:
-        customers=[]
         print("""
               ====Online Banking App====
               Welcome to your Online
               Banking User Interface
-              
               Would you like to:
               1. Create an account
               2. Login
@@ -24,20 +32,18 @@ def main():
               """)
         num = input('Select an option by selecting a number: ')
         if int(num)==1:
-            name = input('Enter your name: ')
-            age = int(input('Enter your age: '))
-            address = input('Enter your address: ')
-            balance = float(input('Enter your current balance: '))
-            account_number = int(input('Enter your 7 digit account number: '))
-            PIN_number = int(input('Enter your PIN number: '))
-            customer = customer_account(name,age,address,balance,account_number,PIN_number)
-            customers.append(customer)
-            print('Account Successfully created!')
+            create_account()
         elif int(num)==2:
-            customer_account.login()
+            account_num= int(input('Enter your account number: '))
+            PIN_num= int(input('Enter your PIN number: '))
+            customer = customer_account
+            accounts_dict[account_num]=customer
+            customer.login(account_num,PIN_num)
+            print('You have successfully logged in!')
         else:
             online_bank.logout()
-    while True:
+            print('You have successfully logged out!')
+            return
         print("""
               ====Online Banking App====
               Choose from the following
@@ -49,16 +55,19 @@ def main():
               ==========================
               """)
         num1=input('Select an option by selecting a number: ')
-        if int(num1==1):
-            withdraw_funds=float(input('How much money would you like to withdraw?'))
-            customer_account.withdraw(withdraw_funds)
-    
+        if int(num1)==1:
+            accounts_dict[customer_account.account_number].withdraw()
+        elif int(num1)==2:
+            accounts_dict[customer_account.account_number].deposit()
+        elif int(num1)==3:
+            accounts_dict[customer_account.account_number].transfer()
+        elif int(num1)==4:
+            accounts_dict[customer_account.account_number].check_balance()
+ 
+main()
     
     
 
         
 
-            
-John = ('John',32,'1 London Road',209,2022,3333)
-Robyn = ('Robyn',22,'129 Ashley Road',900,7862,0000)      
-main()
+
