@@ -13,26 +13,32 @@ Transfer funds from their account to another valid account (up to £1000)
 Deposit funds
 Withdraw Funds
 """
+import csv
 import random
-
 class customer_account():
+    accounts_dict = dict()
     """this class contains information about the customer"""
     account_number = random.randint(1000000,9999999)
     def __init__(self,name,age,address,balance,PIN):
-        self.name = name
-        self.age = age
-        self.address = address
+        self.name = str(name)
+        self.age = int(age)
+        self.address = str(address)
         self.balance = float(balance)
         self.PIN = int(PIN)
         self.account = customer_account.account_number
         customer_account.account_number!=customer_account.account_number
-    def login(self,account_num,PIN_num):
-        account_num= int(input('Enter your account number: '))
-        PIN_num= int(input('Enter your PIN number: '))
-        if self.account!= account_num  or self.PIN != PIN_num:
-            print('Incorrect account number or PIN. Please try again.')
-        else:
-            print('Successfully logged in!')
+    def create_account(self):   
+        if self.name == "" or self.age == "" or self.address == "" or self.balance == "" or self.PIN == "":
+            print('Must complete all fields! Please try again.')
+            return
+        header = ['Name','Age','Address','Balance','PIN','Account Number']
+        data = [self.name,self.age,self.address,self.balance,self.PIN,self.account]
+        self.data = data
+        with open('customer_accounts.csv','w',encoding='UTF8',newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            writer.writerow(self.data)
+        print('Your account has been successfully created! Your account number is: ', self.account)
     def deposit(self):
         deposit_funds = float(input('How much money would you like to deposit?'))
         self.balance += deposit_funds
@@ -57,12 +63,8 @@ class customer_account():
         elif transfer_funds>1000:
             print('Transfer unsuccessful! Amount exceeds limit of £1000.')
     def check_balance(self):
-        print('Your balance is: £',self.balance)
-        
-            
-            
-
-        
-        
- 
-  
+        return print('Your balance is: £', self.balance)
+    def getAccountNumber(self):
+        return print('Your account number is: ',self.account_number)
+    def getName(self):
+        return print('The name under your account is ',self.name)
