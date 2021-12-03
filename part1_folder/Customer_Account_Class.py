@@ -13,10 +13,9 @@ Transfer funds from their account to another valid account (up to £1000)
 Deposit funds
 Withdraw Funds
 """
-import csv
+
 import random
 class customer_account():
-    accounts_dict = dict()
     """this class contains information about the customer"""
     account_number = random.randint(1000000,9999999)
     def __init__(self,name,age,address,balance,PIN):
@@ -31,13 +30,6 @@ class customer_account():
         if self.name == "" or self.age == "" or self.address == "" or self.balance == "" or self.PIN == "":
             print('Must complete all fields! Please try again.')
             return
-        header = ['Name','Age','Address','Balance','PIN','Account Number']
-        data = [self.name,self.age,self.address,self.balance,self.PIN,self.account]
-        self.data = data
-        with open('customer_accounts.csv','w',encoding='UTF8',newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-            writer.writerow(self.data)
         print('Your account has been successfully created! Your account number is: ', self.account)
     def deposit(self):
         deposit_funds = float(input('How much money would you like to deposit?'))

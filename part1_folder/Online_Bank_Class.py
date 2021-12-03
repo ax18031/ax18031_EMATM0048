@@ -14,6 +14,8 @@ from Customer_Account_Class import customer_account
 class online_bank(customer_account):
     def __init__(self,name,age,address,balance,PIN):
         super().__init__(name,age,address,balance,PIN)
+    def logout(self):
+        return print('You have successfully logged out!')
     
 
         
