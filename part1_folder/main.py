@@ -10,7 +10,6 @@ from Customer_Account_Class import customer_account
 def main():
 
     while True:
-        customer_information = dict()
         print("""
               ====Online Banking App====
               Welcome to your Online
@@ -27,22 +26,49 @@ def main():
             address = str(input('Enter your address: '))
             balance = float(input('Enter your balance: '))
             PIN = int(input('Enter your 4 digit PIN :'))
-            account_numm= customer_account.account_number
-            customer_information['Name'] = name
-            customer_information['Age']=age
-            customer_information['Address']=address
-            customer_information['Balance']=balance
-            customer_information['PIN']=PIN
-            customer_information['Account Number']=account_numm
-            customer = customer_account(name=name,age=age,address=address,balance=balance,PIN=PIN)
+            customer = customer_account(name,age,address,balance,PIN)
             customer.create_account()
-        customers_= []
-        customer_copy = customer_information.copy()
-        customers_.append(customer_copy)
+        
+        elif int(num)==2:
+            account= int(input('Please enter your account number: '))
+            pin = int(input('Please enter your 4 digit PIN: '))
+            customer.login(account,pin)
         break
-        # elif int(num)==2:
-            #"account_num = int(input('Please enter your account number: '))"
-            #"pin = int(input('Please enter your 4 digit PIN: '))"
+     
+    while True:  
+        print("""
+              ====Online Banking App====
+              Choose from the following 
+              options:
+              1. Deposit money
+              2. Withdraw money
+              3. Transfer Funds
+              4. Check Balance
+              5. Check account details
+              ==========================
+              """)
+        num1 = input('Select an option by selecting a number: ')
+        if int(num1)==1:
+            deposit_funds = float(input('How much money would you like to deposit?'))
+            customer.deposit(deposit_funds)
+        if int(num1)==2:
+            withdraw_funds = float(input('How much money would you like to withdraw?'))
+            customer.withdraw(withdraw_funds)
+        if int(num1)==3:
+            transfer_funds = float(input('Enter the amount you would like to transfer: '))
+            receiver = customer_account(name=None,age,address,balance,PIN)
+            customer.transfer(transfer_funds,receiver)
+        if int(num1)==4:
+            customer.check_balance()
+        if int(num1)==5:
+            customer.getName()
+            customer.getAge()
+            customer.getAddress()
+            customer.getBalance
+            customer.getAccountNumber()
+            customer.getPIN()
+
+    
 
 
 main()        
