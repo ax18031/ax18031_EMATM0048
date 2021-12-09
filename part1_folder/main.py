@@ -19,6 +19,7 @@ def menu(user):
               3. Transfer Funds
               4. Check Balance
               5. Check account details
+              6. Change your PIN
               ==========================
               """)
         num1 = int(input('Enter a number to select an option: '))
@@ -37,6 +38,9 @@ def menu(user):
         if int(num1)==5 and user!=None:
             user.showdetails()
             user.getBalance()
+        if int(num1)==6 and user!= None:
+            user.changePIN()
+
 
 def main():
     while True:
@@ -58,10 +62,14 @@ def main():
             pin = int(input('Please enter your PIN: '))
             user = Customer_Account(name,age,balance,pin)
             user.createaccount()
-            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-            start = menu(user_customer_action)
-            if start == False:
-                break
+        break
+    while True:
+        user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+        menu(user_customer_action)
+        break 
+
+
+
 main()
         
         
