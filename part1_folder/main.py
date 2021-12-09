@@ -8,6 +8,9 @@ This file is to run the classes that I have implemented.
 """
 from Customer_Account_Class import Customer_Action, Customer_Account
 
+accounts_dict = {}
+
+
 
 def menu(user):
         print("""
@@ -56,14 +59,21 @@ def main():
               """)
         num = int(input('Enter a number to select an option: '))
         if num == 1:
-            name = str(input('Please enter your full name: '))
-            age = int(input('Please enter your age: '))
-            balance = float(input('Please enter your balance: '))
-            pin = int(input('Please enter your PIN: '))
+            name = input('Enter your full name: ')
+            age = int(input('Enter your age: '))
+            balance = float(input('Enter your current balance: '))
+            pin = int(input('Enter your 4 digit PIN: '))
             user = Customer_Account(name,age,balance,pin)
             user.createaccount()
-        break
+        elif num ==2:
+            account_num = int(input('Please enter your account number: '))
+            pin_num = int(input('Please enter your PIN number: '))
+            user = Customer_Account(name,age,balance,pin_num)
+            user.login(account_num,pin_num)
+
+    
     while True:
+        user = Customer_Account(name,age,balance,pin)
         user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
         menu(user_customer_action)
         break 

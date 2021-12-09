@@ -1,2 +1,9 @@
-Name,Age,Address,Balance,PIN,Account Number
-Jack	,90,45 hell ,2.0,1111,4176359
+Name,Age,Balance,Account Number,PIN
+Jack,22,89876.0,9436303,0000
+
+Rocky,10,300.0,1487755,6789
+
+Michelle,61,789.0,1487756,2222
+
+Izzy,21,90.0,6331477,3232
+

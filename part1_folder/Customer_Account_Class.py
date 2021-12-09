@@ -13,12 +13,13 @@ Transfer funds from their account to another valid account (up to £1000)
 Deposit funds
 Withdraw Funds
 """
-from DataStorage import Data_Storage
+
 import csv
+import random
 import pandas as pd
 
 class Customer_Account:
-    account_number = 0
+    account_number = random.randint(1000000,9999999)
     
     def __init__(self,name,age,balance,pin):
         self.name = str(name)
@@ -28,8 +29,6 @@ class Customer_Account:
         self.account = Customer_Account.account_number
         Customer_Account.account_number += 1
         Customer_Account.account_number!=Customer_Account.account_number
-        self.customer = Data_Storage()
-        self.accounts_file = "customer_accounts.csv"
         
         
     def showdetails(self):
@@ -39,43 +38,43 @@ class Customer_Account:
               ' Account Number: '+str(self.account))
     
     def createaccount(self):
-        self.users_account = Customer_Account(self.name,self.age,self.balance,self.pin)
-        customer_information = dict()
-        customer_information['Name']=self.users_account.name
-        customer_information['Age']=self.users_account.age
-        customer_information['Balance']=self.users_account.balance
-        customer_information['Account Number']=self.account
-        customer_information['PIN']=self.users_account.pin
-        self.Data_Storage.write(customer_information)
-        print('Account successfully created! Your Account Number is:',self.account)
-
-        
+         if self.name == "" or self.age == "" or self.balance == "" or self.pin == "":
+             print('Must complete all fields! Please try again.')
+             return
+         data = [self.name,self.age,self.balance,self.account,self.pin]
+         self.data = data
+         with open('customer_accounts.csv','a',encoding='UTF8') as f:
+             write = csv.writer(f)
+             write.writerow(self.data)
+             write.writerow([])
+             f.close()
+         print('Your account has been successfully created! Your account number is: ', self.account)
     
+    def login(self,account_num,pin_num):
+        df = pd.read_csv('customer_accounts.csv')
+        for customer in df:
+            if df['Account Number']!= account_num:
+                print('Not a valid account number! Please create an account or try again!')
+                return
+            elif df['Account Number']==account_num and df['PIN']==pin_num:
+                print('Login Successful! Welcome ',self.name)
+            else:
+                print('PIN is incorrect! Please try again.')
+                return 
+            
+                
+        
+  
 class Customer_Action(Customer_Account):
     
     def __init__(self,name,age,balance,pin):
         super().__init__(name,age,balance,pin)
         self.accounts_file = "customer_accounts.csv"
     
-    def update(self,variable,index):
-        with open(self.accounts_file) as customer_accounts:
-            customer_reader = csv.reader(customer_accounts,delimiter=',')
-            l = list(customer_reader)
-            df = pd.DataFrame(l)
-            df.columns=df.iloc[0]
-            df=df.reindex(df.index.drop(0).reset_index(drop=True))
-            df.to_csv(self.accounts_file,index=False)
-    
-    def update_balance(self,balance):
-        self.update(balance,index=2)
-    
-    def update_pin(self,new_pin):
-        self.update(new_pin,index=4)
 
     def deposit(self,deposit_funds):
         self.deposit_funds = deposit_funds
-        balance = self.balance + self.deposit_funds
-        self.update_balance(balance)
+        self.balance += self.deposit_funds
         print('Your new balance is £', self.balance)
     
     
@@ -100,7 +99,8 @@ class Customer_Action(Customer_Account):
             return print('Cannot transfer negative amounts!')
         elif self.transfer_funds>1000:
             return print('Transfer unsuccessful! Amount exceeds limit of £1000.')
-            
+        
+    
     def changePIN(self):
         p = int(input('Enter your current PIN: '))
         if p == self.pin:
