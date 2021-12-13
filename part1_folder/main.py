@@ -19,6 +19,7 @@ def menu(user):
               4. Check Balance
               5. Check account details
               6. Change your PIN
+              7. Logout
               ==========================
               """)
         num1 = int(input('Enter a number to select an option: '))
@@ -51,6 +52,7 @@ def main():
               Would you like to:
                   1. Create an account
                   2. Login
+                  3. Freeze Account
               ==========================
               """)
         num = int(input('Enter a number to select an option: '))
@@ -61,25 +63,35 @@ def main():
             pin = int(input('Enter your 4 digit PIN: '))
             user = Customer_Account(name,age,balance,pin)
             user.createaccount()
-            menu(user)
+            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+            menu(user_customer_action)
         elif num ==2:
             account_num = str(input('Please enter your account number: '))
             pin_num = str(input('Please enter your PIN number: '))
             login_user = Customer_Account.login(account_num,pin_num)
             if login_user == True:
-                user = Customer_Account(name,age,balance,pin_num)
-                menu(user)
+                user = Customer_Account(name,age,balance,pin)
+                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+                menu(user_customer_action)
+        elif num == 3:
+            name = str(input('Enter your name: '))
+            age = int(input('Enter your age: '))
+            balance = 0
+            acc = int(input('Enter your account number: '))
+            pins = int(input('Enter your PIN: '))
+            user = Customer_Account(name,age,balance,pins)
+            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+            user_customer_action.freeze_acc(acc,pins)
+ 
+main()               
+ 
+                
 
     
-    while True:
-        user = Customer_Account(name,age,balance,pin)
-        user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-        menu(user_customer_action)
-        break 
 
 
 
-main()
+
         
         
 

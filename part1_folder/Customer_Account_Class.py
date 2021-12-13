@@ -17,15 +17,15 @@ Withdraw Funds
 import csv
 from csv import DictReader
 import random
-import pandas as pd
 
+# Parent Class
 class Customer_Account:
     account_number = random.randint(1000000,9999999)
     
     def __init__(self,name,age,balance,pin):
         self.name = str(name)
-        self.age = str(age)
-        self.balance = str(balance)
+        self.age = int(age)
+        self.balance = float(balance)
         self.pin = int(pin)
         self.account = Customer_Account.account_number
         Customer_Account.account_number += 1
@@ -51,36 +51,46 @@ class Customer_Account:
              f.close()
          print('Your account has been successfully created! Your account number is: ', self.account)
     
-    def login(self,account_num,pin_num):
+    def login(account_num,pin_num):
         with open('customer_accounts.csv','r') as f:
             dict_reader = DictReader(f)
             list_dict = list(dict_reader)
         for dictionary in list_dict:
             if (dictionary['Account Number']==account_num) and (dictionary['PIN']==pin_num):
-                n1 = dictionary['Name'] 
-                print(n1)
                 print('Login Successful!')
                 return True
-            else:
-                print('Incorrect account number/PIN or account does not exist!')
+            elif Customer_Action.freeze_acc == True:
+                print('Cannot login since account is frozen!')
                 return False
+        print('Incorrect account number/PIN or account does not exist!')
+        return False
+                    
+
     
-
-            
-
-
-        
-  
+# Child Class
 class Customer_Action(Customer_Account):
     
     def __init__(self,name,age,balance,pin):
         super().__init__(name,age,balance,pin)
         self.accounts_file = "customer_accounts.csv"
     
-
+    def freeze_acc(self,acc,pins):
+        with open('customer_accounts.csv','r') as f:
+            dict_reader = DictReader(f)
+            list_dict = list(dict_reader) 
+            for dictionary in list_dict:
+                if (dictionary['Account Number']==acc) and (dictionary['PIN']==pins):
+                    Customer_Account.login == False
+                    Customer_Action.transfer == False
+                    print('Account Successfully Frozen!')
+                    return True
+                else:
+                    print('Incorrect account number/PIN or account does not exist!' )
+                    return False
+    
     def deposit(self,deposit_funds):
         self.deposit_funds = deposit_funds
-        self.balance += self.deposit_funds
+        self.balance += self.deposit_funds      
         print('Your new balance is £', self.balance)
     
     
@@ -113,7 +123,12 @@ class Customer_Action(Customer_Account):
             t = int(input('Enter your new PIN: '))
             if t!=self.pin:
                 self.pin = t
-                self.update_pin(t)
+                with open('customer_accounts.csv','a') as f:
+                    dict_reader = DictReader(f)
+                    list_dict = list(dict_reader)
+                    for dictionary in list_dict:
+                        if dictionary['Account Number']==self.account:
+                            dictionary['PIN']==self.pin
                 print('Successfully updated your PIN! Your new PIN number is', self.pin)
             else:
                 print('You have entered the sane PIN as before, Please enter a new one!')
