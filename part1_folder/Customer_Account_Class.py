@@ -15,6 +15,7 @@ Withdraw Funds
 """
 
 import csv
+from csv import DictReader
 import random
 import pandas as pd
 
@@ -23,8 +24,8 @@ class Customer_Account:
     
     def __init__(self,name,age,balance,pin):
         self.name = str(name)
-        self.age = int(age)
-        self.balance = float(balance)
+        self.age = str(age)
+        self.balance = str(balance)
         self.pin = int(pin)
         self.account = Customer_Account.account_number
         Customer_Account.account_number += 1
@@ -51,18 +52,23 @@ class Customer_Account:
          print('Your account has been successfully created! Your account number is: ', self.account)
     
     def login(self,account_num,pin_num):
-        df = pd.read_csv('customer_accounts.csv')
-        for customer in df:
-            if df['Account Number']!= account_num:
-                print('Not a valid account number! Please create an account or try again!')
-                return
-            elif df['Account Number']==account_num and df['PIN']==pin_num:
-                print('Login Successful! Welcome ',self.name)
+        with open('customer_accounts.csv','r') as f:
+            dict_reader = DictReader(f)
+            list_dict = list(dict_reader)
+        for dictionary in list_dict:
+            if (dictionary['Account Number']==account_num) and (dictionary['PIN']==pin_num):
+                n1 = dictionary['Name'] 
+                print(n1)
+                print('Login Successful!')
+                return True
             else:
-                print('PIN is incorrect! Please try again.')
-                return 
+                print('Incorrect account number/PIN or account does not exist!')
+                return False
+    
+
             
-                
+
+
         
   
 class Customer_Action(Customer_Account):
@@ -130,3 +136,5 @@ class Customer_Action(Customer_Account):
     
     def getName(self):
         return print('The name under your account is ',self.name)
+    
+

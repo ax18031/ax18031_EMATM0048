@@ -8,10 +8,6 @@ This file is to run the classes that I have implemented.
 """
 from Customer_Account_Class import Customer_Action, Customer_Account
 
-accounts_dict = {}
-
-
-
 def menu(user):
         print("""
               ====Online Banking App====
@@ -65,11 +61,14 @@ def main():
             pin = int(input('Enter your 4 digit PIN: '))
             user = Customer_Account(name,age,balance,pin)
             user.createaccount()
+            menu(user)
         elif num ==2:
-            account_num = int(input('Please enter your account number: '))
-            pin_num = int(input('Please enter your PIN number: '))
-            user = Customer_Account(name,age,balance,pin_num)
-            user.login(account_num,pin_num)
+            account_num = str(input('Please enter your account number: '))
+            pin_num = str(input('Please enter your PIN number: '))
+            login_user = Customer_Account.login(account_num,pin_num)
+            if login_user == True:
+                user = Customer_Account(name,age,balance,pin_num)
+                menu(user)
 
     
     while True:
