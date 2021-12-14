@@ -7,6 +7,9 @@ Created on Fri Nov 19 12:54:31 2021
 This file is to run the classes that I have implemented. 
 """
 from Customer_Account_Class import Customer_Action, Customer_Account
+from csv import DictReader
+import pandas as pd
+import numpy as np
 
 def menu(user):
         print("""
@@ -41,6 +44,38 @@ def menu(user):
         if int(num1)==6 and user!= None:
             user.changePIN()
 
+#def login(account_num,pin_num):
+ #   with open('customer_accounts.csv','r') as f:
+  #      dict_reader = DictReader(f)
+   #     list_dict = list(dict_reader)
+    #    for dictionary in list_dict:
+     #       if (dictionary['Account Number']== account_num) and (dictionary['PIN']== pin_num):
+      #          print('Login Successful!')
+       #         return True
+        #    elif Customer_Action.freeze_acc == True:
+              #  return False
+         #       print('Cannot login since account is frozen!')
+    #print('Incorrect account number/PIN or account does not exist!')
+    #return False
+
+#def login(account_num,pin_num):
+ #   df = pd.read_csv('customer_accounts.csv')
+  #  df_k = df.loc[df['Account Number']==account_num]
+   # if (df['Account Number']==account_num) and (df_k['PIN']==pin_num):
+    #    print('Login Successful! Welcome',df_k['Name'])
+     #   return True
+   # print('Login failed! Incorrect account number/PIN or the account does not exist!')
+    #return False
+
+def login(account_num,pin_num):
+    df = pd.read_csv('customer_accounts.csv')
+    df_k = df.loc[df['Account Number']==account_num]
+    if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num:
+        print('Login Successful! Welcome to the online bank interface ')
+        return True
+    else:
+        print('Login Failed! Please try again')
+        return False
 
 def main():
     while True:
@@ -57,31 +92,26 @@ def main():
               """)
         num = int(input('Enter a number to select an option: '))
         if num == 1:
-            name = input('Enter your full name: ')
-            age = int(input('Enter your age: '))
-            balance = float(input('Enter your current balance: '))
-            pin = int(input('Enter your 4 digit PIN: '))
+            name = str(input('Please enter your Name:'))
+            age = int(input('Please enter your Age:'))
+            balance = float(input('Please enter your initial Balance:'))
+            pin = int(input('Please enter your 4 digit PIN'))
             user = Customer_Account(name,age,balance,pin)
             user.createaccount()
-            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-            menu(user_customer_action)
+            menu(user)
         elif num ==2:
-            account_num = str(input('Please enter your account number: '))
-            pin_num = str(input('Please enter your PIN number: '))
-            login_user = Customer_Account.login(account_num,pin_num)
+            account_num = int(input('Please enter a your Account Number:'))
+            pin_num = int(input('Please enter your PIN:'))
+            login_user = login(account_num,pin_num)
             if login_user == True:
-                user = Customer_Account(name,age,balance,pin)
-                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-                menu(user_customer_action)
-        elif num == 3:
-            name = str(input('Enter your name: '))
-            age = int(input('Enter your age: '))
-            balance = 0
-            acc = int(input('Enter your account number: '))
-            pins = int(input('Enter your PIN: '))
-            user = Customer_Account(name,age,balance,pins)
-            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-            user_customer_action.freeze_acc(acc,pins)
+                df = pd.read_csv('customer_accounts.csv')
+                df_data = df.loc[df['Account Number']== account_num]
+                name1 = df_data['Name']
+                age1 = df_data['Age']
+                balance1 = df_data['Balance']
+                pin1 = df_data['PIN']
+                user1 = Customer_Action(name1,age1,balance1,pin1)
+                menu(user1)
  
 main()               
  

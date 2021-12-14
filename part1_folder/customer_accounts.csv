@@ -1,4 +1,4 @@
-MiName,Age,Balance,Account Number,PIN
+Name,Age,Balance,Account Number,PIN
 Jack,22,89876.0,9436303,0000
 
 Rocky,10,300.0,1487755,6789
@@ -22,4 +22,8 @@ Harry Dubin,67,10000.0,1607568,8983
 Harty Hamin,90,2134.0,1607570,789
 
 Kathryn Jenkins,100,2345.0,1607572,1324
+
+Ursula Lee,45,21.0,2948137,8983
+
+Tinsley Mortimer,43,900.0,2503092,1456
 
