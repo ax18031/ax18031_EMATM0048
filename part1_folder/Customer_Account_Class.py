@@ -16,6 +16,18 @@ Withdraw Funds
 import csv
 from csv import DictReader
 import random
+import pandas as pd
+import numpy as np
+
+def login(account_num,pin_num):
+    df = pd.read_csv('customer_accounts.csv')
+    df_k = df.loc[df['Account Number']==account_num]
+    if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num:
+        print('Login Successful! Welcome to the online bank interface ')
+        return True
+    else:
+        print('Login Failed! Please try again')
+        return False
 
 class Customer_Account:
     account_number = random.randint(1000000,9999999)
@@ -49,7 +61,16 @@ class Customer_Account:
              f.close()
          print('Your account has been successfully created! Your account number is: ', self.account)
     
-
+    def freeze_acc(self,account2,pin2):
+        df = pd.read_csv('customer_accounts.csv')
+        df_k = df.loc[df['Account Number']==account2]
+        if np.array(df_k['PIN'])== pin2 and np.array(df_k['Account Number'])== account2:
+            login == False
+            Customer_Action.transfer == False
+            print('Account successfully frozen! You will no longer be able to receive transfers or login to your account.')
+        else:
+            print('Incorrect account number/PIN or account does not exist!')
+            
     
 
            
@@ -84,12 +105,16 @@ class Customer_Action(Customer_Account):
         if self.transfer_funds < 1000 and self.balance>self.transfer_funds:
             self.balance -= self.transfer_funds
             print('Transfer successful! Your balance is now £', self.balance , '.')
+            return True
         elif self.balance < self.transfer_funds:
-            return print('Insufficient funds to withdraw. Please try again!')
+            print('Insufficient funds to withdraw. Please try again!')
+            return False
         elif self.transfer_funds < 0:
-            return print('Cannot transfer negative amounts!')
+            print('Cannot transfer negative amounts!')
+            return False
         elif self.transfer_funds>1000:
-            return print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+            print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+            return False
         
     
     def changePIN(self):
@@ -116,7 +141,7 @@ class Customer_Action(Customer_Account):
         return print('Your PIN is: ',self.pin)
     
     def getBalance(self):
-        return print('Your Balance is £: ', self.balance)
+        return print('Your Balance is £', self.balance)
     
     def getAge(self):
         return print('Your age is: ', self.age)
