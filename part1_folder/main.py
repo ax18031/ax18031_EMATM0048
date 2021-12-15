@@ -44,7 +44,11 @@ def menu(user):
             user.getBalance()
         if int(num1)==6 and user!= None:
             user.changePIN()
+        if int(num1)==7 and user!= None:
+            user.logout()
+            break
         if int(num1)==8:
+            user.logout()
             break
 
 def login(account_num,pin_num):
@@ -81,7 +85,7 @@ def main():
             user.createaccount()
             menu(user_customer_action)
         elif num ==2:
-            account_num = int(input('Please enter a your Account Number: '))
+            account_num = int(input('Please enter your Account Number: '))
             pin_num = int(input('Please enter your PIN:'))
             login_user = login(account_num,pin_num)
             if login_user == True:
