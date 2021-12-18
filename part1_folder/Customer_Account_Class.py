@@ -14,7 +14,6 @@ Deposit funds
 Withdraw Funds
 """
 import csv
-from csv import DictReader
 import random
 import pandas as pd
 import numpy as np
@@ -62,10 +61,10 @@ class Customer_Account:
         
     def showdetails(self):
         """This function shows the details of the user once logged in."""
-        print('Name: '+ str(self.name) + 
-              ' Age: '+ str(self.age) +
-              ' PIN: '+str(self.pin) +
-              ' Account Number: '+str(self.account)) # it is a simple print function 
+        print('Name:',self.name)
+        print('Age:',self.age)
+        print('Account Number:',self.account)
+        print('PIN:',self.pin)# it is a simple print function 
     
     def createaccount(self):
         """This function creates a users account and adds their information to
@@ -170,22 +169,38 @@ class Customer_Action(Customer_Account):
         
     
     def getPIN(self):
+        """This function allows users to retrieve their PIN after logging in."""
         return print('Your PIN is: ',self.pin)
     
     def getBalance(self):
+        """This function allows users to retrieve their Balance after logging in."""
         return print('Your Balance is £', self.balance)
     
     def getAge(self):
+        """This function allows users to retrieve their Age after logging in."""
         return print('Your age is: ', self.age)
     
     def getAccountNumber(self):
-        return print('Your account number is: ',self.account_number)
+        """This function allows users to retrieve their Account Number after logging in."""
+        return print('Your account number is: ',self.account)
     
     def getName(self):
+        """This function allows users to retrieve their Name after logging in."""
         return print('The name under your account is ',self.name)
     
     def logout(self):
-
+        """ This function allows users to logout and updates their information 
+        in the csv file which we keep all the information stored into our system"""
+        df = pd.read_csv('customer_accounts.csv')
+        df_k=df.loc[df['Account Number']==self.account]
+        df_k.at['Name']=self.name
+        df_k.at['Age']=self.age
+        df_k.at['Account Number']=self.account
+        df_k.at['PIN']=self.pin
+        df_k.at['Balance']=self.balance
+        df.to_csv('customer_accounts.csv')
+        return print('Logout Successful! See you soon ', self.name)
+        
         
 
     

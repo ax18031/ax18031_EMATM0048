@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 
 def menu(user):
+    """"This function acts as the way customers interact with the banking system
+    once they have logged into their account or created an account with us."""
     while True:
         print("""
               ====Online Banking App====
@@ -26,29 +28,29 @@ def menu(user):
               8. Previous Page
               ==========================
               """)
-        num1 = int(input('Enter a number to select an option: '))
+        num1 = int(input('Enter a number to select an option: ')) #user inputs a number to access a service
         if int(num1)==1 and user!= None:
-            deposit_funds = float(input('How much money would you like to deposit?'))
+            deposit_funds = float(input('How much money would you like to deposit?'))#deposit 
             user.deposit(deposit_funds)
         if int(num1)==2 and user!=None:
-            withdraw_funds = float(input('How much money would you like to withdraw?'))
+            withdraw_funds = float(input('How much money would you like to withdraw?'))#withdraw
             user.withdraw(withdraw_funds)
         if int(num1)==3 and user != None:
-            transfer_funds = float(input('Enter the amount you would like to transfer: '))
+            transfer_funds = float(input('Enter the amount you would like to transfer: '))#transfer
             receiver = int(input('Enter the account number of the person you would like to transfer to.'))
             user.transfer(transfer_funds,receiver)
         if int(num1)==4 and user != None:
-            user.getBalance()
+            user.getBalance()#retrieve balance
         if int(num1)==5 and user!=None:
-            user.showdetails()
+            user.showdetails()#shows information about the user
             user.getBalance()
         if int(num1)==6 and user!= None:
-            user.changePIN()
+            user.changePIN() #allows a user to change their pin
         if int(num1)==7 and user!= None:
-            user.logout()
+            user.logout() #allows users to logout
             break
         if int(num1)==8:
-            user.logout()
+            user.logout() #automatically updates when they go back to the previous menu
             break
 
 def login(account_num,pin_num):
@@ -59,7 +61,7 @@ def login(account_num,pin_num):
         return True
     else:
         print('Login Failed! Please try again')
-        return False
+        return False7
 
 def main():
     while True:
