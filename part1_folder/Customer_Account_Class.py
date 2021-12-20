@@ -17,6 +17,7 @@ import csv
 import random
 import pandas as pd
 import numpy as np
+import datetime
 
 
 
@@ -99,12 +100,15 @@ class Customer_Action(Customer_Account):
     def __init__(self,name,age,balance,pin):
         """This function initialises the class"""
         super().__init__(name,age,balance,pin)
+        self.transaction_history = []
     
     def deposit(self,deposit_funds):
         """This function allows users to depoit money into their bank account.
         The input is the amount the user wants to deposit into their account."""
         self.deposit_funds = deposit_funds 
-        self.balance += self.deposit_funds #the balance of the user is now balance + deposit fund
+        self.balance += self.deposit_funds#the balance of the user is now balance + deposit fund
+        time = datetime.datetime.now()
+        self.trans_history(deposit_funds,'deposit',time)
         print('Your new balance is £', self.balance) # new balance is stated
     
     
@@ -116,8 +120,10 @@ class Customer_Action(Customer_Account):
             #input then they don't have enough money to withdraw
             return print('Insufficient funds to withdraw. Please try again!')
         else:
-            self.balance -= self.withdraw_funds #the balance of the user is now 
+            self.balance -= self.withdraw_funds#the balance of the user is now 
             #balance - withdraw fund
+            time = datetime.datetime.now()
+            self.trans_history(withdraw_funds,'withdraw',time)
             print('Withdrawal successful! Your balance is now £' , self.balance, '.')
             # new balance is stated
     
@@ -130,6 +136,8 @@ class Customer_Action(Customer_Account):
             #and their balance must be higher than the amount they want to transfer
             self.withdraw(transfer_funds)
             receiver.deposit(transfer_funds)
+            time = datetime.datetime.now()
+            self.trans_history(transfer_funds,'transfer',time)
             print('Transfer successful! Your balance is now £', self.balance , '.')
             return True
         elif self.balance < self.transfer_funds: #balance less than the amount they want to transfer
@@ -187,6 +195,22 @@ class Customer_Action(Customer_Account):
         df.loc[df['Account Number']==self.account,'PIN']= self.pin
         df.to_csv('customer_accounts.csv',index=False)
         print('Logout Successful! Goodbye')
+    
+    def trans_history(self, amount, trans_type, time):
+        if trans_type == 'deposit':
+            data = ['Deposited £',amount,' at', time ,' balance is:',self.balance]
+            self.transaction_history.append(data)
+        elif trans_type == 'withdraw':
+            data = ['Withdrew £',amount,' at', time,' balance is:',self.balance]
+            self.transaction_history.append(data)
+        elif trans_type == 'transfer':
+            data = ['Transfered £',amount,' at', time,' balance is:',self.balance]
+            self.transaction_history.append(data)
+            
+            
+    def show_history(self):
+        print(self.transaction_history)
+        
         
 class Checking_Account(Customer_Action):
     
@@ -204,10 +228,12 @@ class Savings_Account(Customer_Action):
         self.fee = 0.1*self.balance
         
     def withdraw(self,withdraw_funds):
-        Customer_Action.withdraw(self,withdraw_funds + self.fee)
+        w = withdraw_funds+self.fee
+        Customer_Action.withdraw(self,w)
         
     def transfer(self,transfer_funds,receiver):
-        Customer_Action.transfer(self,transfer_funds + self.fee, receiver)
+        n = transfer_funds + self.fee
+        Customer_Action.transfer(self,n,receiver)
                     
         
         

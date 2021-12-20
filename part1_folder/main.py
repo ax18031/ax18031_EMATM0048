@@ -24,8 +24,8 @@ def menu(user):
               4. Check Balance
               5. Check account details
               6. Change your PIN
-              7. Logout
-              8. Previous Page
+              7. Transaction History
+              8. Logout
               ==========================
               """)
         num1 = int(input('Enter a number to select an option: ')) #user inputs a number to access a service
@@ -47,10 +47,9 @@ def menu(user):
         if int(num1)==6 and user!= None:
             user.changePIN() #allows a user to change their pin
         if int(num1)==7 and user!= None:
-            user.logout() #allows users to logout
-            break
+            user.show_history() #shows transaction history for a user
         if int(num1)==8:
-            user.logout() #automatically updates when they go back to the previous menu
+            user.logout() #logs the user out, saving to csv file
             break
 
 def login(account_num,pin_num):
