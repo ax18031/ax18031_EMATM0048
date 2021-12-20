@@ -6,7 +6,7 @@ Created on Fri Nov 19 12:54:31 2021
 @author: jackmather
 This file is to run the classes that I have implemented. 
 """
-from Customer_Account_Class import Customer_Action, Customer_Account
+from Customer_Account_Class import Customer_Action, Customer_Account, Savings_Account, Checking_Account
 import pandas as pd
 import numpy as np
 
@@ -61,7 +61,7 @@ def login(account_num,pin_num):
         return True
     else:
         print('Login Failed! Please try again')
-        return False7
+        return False
 
 def main():
     while True:
@@ -78,14 +78,24 @@ def main():
               """)
         num = int(input('Enter a number to select an option: '))
         if num == 1:
+            account_type = int(input('Would you like to open a [1] Current, [2] Checking or [3] Savings Account?'))
             name = str(input('Please enter your name: '))
             age = int(input('Please enter your age: '))
             balance = float(input('Please enter your initial balance: '))
             pin = int(input('Please enter your 4 digit PIN: '))
             user = Customer_Account(name,age,balance,pin)
-            user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
-            user.createaccount()
-            menu(user_customer_action)
+            if account_type == 1:
+                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+                user_customer_action.createaccount()
+                menu(user_customer_action)
+            elif account_type == 2:
+                user_checking = Checking_Account(user.name,user.age,user.balance,user.pin)
+                user_checking.createaccount()
+                menu(user_checking)
+            elif account_type == 3:
+                user_savings = Savings_Account(user.name,user.age,user.balance,user.pin)
+                user_savings.createaccount()
+                menu(user_savings)
         elif num ==2:
             account_num = int(input('Please enter your Account Number: '))
             pin_num = int(input('Please enter your PIN:'))
@@ -97,7 +107,8 @@ def main():
                 age1 = df_data['Age']
                 balance1 = df_data['Balance']
                 pin1 = df_data['PIN']
-                user1 = Customer_Action(name1,age1,balance1,pin1)
+                user = Customer_Account(name1,age1,balance1,pin1)
+                user1 = Customer_Action(user.name,user.age,user.balance,user.pin)
                 menu(user1)
         elif num == 3:
             choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))

@@ -18,6 +18,8 @@ import random
 import pandas as pd
 import numpy as np
 
+
+
 def login(account_num,pin_num):
     """This function is a login function which logs our customers in whom have
     already created an account with the interface"""
@@ -30,16 +32,7 @@ def login(account_num,pin_num):
     else:# if the pin number and account number do not match our records, then login has failed!
         print('Login Failed! Please try again')
         return False
-def getIndex(df,account):
-    listofpositions = list()
-    result = df.isin([account])
-    seriesdf = result.any()
-    column_names = list(seriesdf[seriesdf==True].index)
-    for col in column_names:
-        rows = list(result[col][result[col]==True].index)
-        for row in rows:
-            listofpositions.append(row,col)
-    return listofpositions
+
     
 
 class Customer_Account:
@@ -106,7 +99,6 @@ class Customer_Action(Customer_Account):
     def __init__(self,name,age,balance,pin):
         """This function initialises the class"""
         super().__init__(name,age,balance,pin)
-        
     
     def deposit(self,deposit_funds):
         """This function allows users to depoit money into their bank account.
@@ -134,11 +126,10 @@ class Customer_Action(Customer_Account):
         """This function allows user to transfer money from their bank account
         into another users bank account up to £1000. The input is the amount 
         the user wants to transfer and the account number of the transferee."""
-        self.transfer_funds = transfer_funds
-        self.receiver = receiver
-        if self.transfer_funds < 1000 and self.balance>self.transfer_funds: #restricted to £1000 
+        if transfer_funds < 1000 and self.balance>transfer_funds: #restricted to £1000 
             #and their balance must be higher than the amount they want to transfer
-            self.balance -= self.transfer_funds
+            self.withdraw(transfer_funds)
+            receiver.deposit(transfer_funds)
             print('Transfer successful! Your balance is now £', self.balance , '.')
             return True
         elif self.balance < self.transfer_funds: #balance less than the amount they want to transfer
@@ -192,14 +183,35 @@ class Customer_Action(Customer_Account):
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
         df = pd.read_csv('customer_accounts.csv')
-        df_k=df.loc[df['Account Number']==self.account]
-        df_k.at['Name']=self.name
-        df_k.at['Age']=self.age
-        df_k.at['Account Number']=self.account
-        df_k.at['PIN']=self.pin
-        df_k.at['Balance']=self.balance
-        df.to_csv('customer_accounts.csv')
-        return print('Logout Successful! See you soon ', self.name)
+        df.loc[df['Account Number']==self.account,'Balance']= self.balance
+        df.loc[df['Account Number']==self.account,'PIN']= self.pin
+        df.to_csv('customer_accounts.csv',index=False)
+        print('Logout Successful! Goodbye')
+        
+class Checking_Account(Customer_Action):
+    
+    def __init__(self,name,age,balance,pin):
+        super().__init__(name,age,balance,pin)
+        
+    def deposit(self,deposit_funds):
+        self.balance *= 1.1
+        Customer_Action.deposit(self,deposit_funds)
+        
+class Savings_Account(Customer_Action):
+    
+    def __init__(self,name,age,balance,pin):
+        super().__init__(name,age,balance,pin)
+        self.fee = 0.1*self.balance
+        
+    def withdraw(self,withdraw_funds):
+        Customer_Action.withdraw(self,withdraw_funds + self.fee)
+        
+    def transfer(self,transfer_funds,receiver):
+        Customer_Action.transfer(self,transfer_funds + self.fee, receiver)
+                    
+        
+        
+
         
         
 
