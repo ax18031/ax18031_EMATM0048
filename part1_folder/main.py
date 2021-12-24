@@ -6,12 +6,13 @@ Created on Fri Nov 19 12:54:31 2021
 @author: jackmather
 This file is to run the classes that I have implemented. 
 """
-from Customer_Account_Class import Customer_Action, Customer_Account, Savings_Account, Checking_Account
+from Customer_Account_Class import Customer_Action, Customer_Account,Savings_Account, Checking_Account, Freeze_Account
+
 import pandas as pd
 import numpy as np
 
 def menu(user):
-    """"This function acts as the way customers interact with the banking system
+    """This function acts as the way customers interact with the banking system
     once they have logged into their account or created an account with us."""
     while True:
         print("""
@@ -106,8 +107,7 @@ def main():
                 age1 = df_data['Age']
                 balance1 = df_data['Balance']
                 pin1 = df_data['PIN']
-                user = Customer_Account(name1,age1,balance1,pin1)
-                user1 = Customer_Action(user.name,user.age,user.balance,user.pin)
+                user1 = Customer_Action(name1,age1,balance1,pin1)
                 menu(user1)
         elif num == 3:
             choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
@@ -117,10 +117,11 @@ def main():
                 balance2 = float(input('Please enter your current balance: '))
                 account2 = int(input('Please enter your account number: '))
                 pin2 = int(input('Please enter your 4 digit PIN: '))
-                user2 = Customer_Account(name2,age2,balance2,pin2)
-                user2.freeze_acc(account2,pin2)
+                user2 = Freeze_Account(name2,age2,balance2,pin2)
+                user2.Customer_Account(account2,pin2)
             elif choice == 'N':
                 print('Thank you! Your account has not been frozen.') 
+                return 
                 
  
 main()               

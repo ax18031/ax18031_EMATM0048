@@ -149,6 +149,8 @@ class Customer_Action(Customer_Account):
         elif self.transfer_funds>1000: #can't transfer over £1000
             print('Transfer unsuccessful! Amount exceeds limit of £1000.')
             return False
+        else:
+            return False
         
     
     def changePIN(self):
@@ -234,7 +236,25 @@ class Savings_Account(Customer_Action):
     def transfer(self,transfer_funds,receiver):
         n = transfer_funds + self.fee
         Customer_Action.transfer(self,n,receiver)
-                    
+
+
+class Freeze_Account(Customer_Account):
+    
+    def __init__(self,name,age,balance,pin):
+        self.name = name
+        self.age = age
+        self.balance = balance
+        self.pin = pin
+    
+    def login(self,account_num,pin_num):
+        login(account_num,pin_num) = False
+        print('Cannot Login since account is frozen')
+        return False
+    
+    def transfer(self,transfer_funds,receiver):
+        Customer_Action.transfer(transfer_funds,receiver)= False 
+        print('Cannot Transfer Money! Account is frozen')
+        return False
         
         
 
