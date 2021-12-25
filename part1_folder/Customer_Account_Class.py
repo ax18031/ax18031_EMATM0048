@@ -21,18 +21,18 @@ import datetime
 
 
 
-def login(account_num,pin_num):
-    """This function is a login function which logs our customers in whom have
-    already created an account with the interface"""
-    df = pd.read_csv('customer_accounts.csv') #load our dataframe
-    df_k = df.loc[df['Account Number']==account_num] # create a new dataframe with our row of interest
-    if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num: 
-        # above, we use a numpy array to check if the account number and pin match our records
-        print('Login Successful! Welcome to the online bank interface ') #successful login 
-        return True
-    else:# if the pin number and account number do not match our records, then login has failed!
-        print('Login Failed! Please try again')
-        return False
+#def login(account_num,pin_num):
+ #   """This function is a login function which logs our customers in whom have
+  #  already created an account with the interface"""
+   # df = pd.read_csv('customer_accounts.csv') #load our dataframe
+    #df_k = df.loc[df['Account Number']==account_num] # create a new dataframe with our row of interest
+   # if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num: 
+    #    # above, we use a numpy array to check if the account number and pin match our records
+     #   print('Login Successful! Welcome to the online bank interface ') #successful login 
+      #  return True
+   # else:# if the pin number and account number do not match our records, then login has failed!
+    #    print('Login Failed! Please try again')
+     #   return False
 
     
 
@@ -75,22 +75,7 @@ class Customer_Account:
              f.close()#closes the file when we have finished making ammendments
         print('Your account has been successfully created! Your account number is: ', self.account)
     
-    def freeze_acc(self,account2,pin2):
-        df = pd.read_csv('customer_accounts.csv')
-        df_k = df.loc[df['Account Number']==account2]
-        if np.array(df_k['PIN'])== pin2 and np.array(df_k['Account Number'])== account2:
-            login == False
-            Customer_Action.transfer == False
-            print('Account successfully frozen! You will no longer be able to receive transfers or login to your account.')
-        else:
-            print('Incorrect account number/PIN or account does not exist!')
-            
-    
 
-           
-           
-
-    
 # Child Class
 class Customer_Action(Customer_Account):
     """This class performs actions to the users account such as withdrawals,
@@ -247,14 +232,39 @@ class Freeze_Account(Customer_Account):
         self.pin = pin
     
     def login(self,account_num,pin_num):
-        login(account_num,pin_num) = False
+        Login_User.login == False
         print('Cannot Login since account is frozen')
         return False
     
     def transfer(self,transfer_funds,receiver):
-        Customer_Action.transfer(transfer_funds,receiver)= False 
+        Customer_Action.transfer(transfer_funds,receiver)== False 
         print('Cannot Transfer Money! Account is frozen')
         return False
+
+class Login_User(Customer_Account):
+    
+    def __init__(self,account,pin):
+        self.account = account
+        self.pin = pin
+    
+    def login(self,account_num,pin_num):
+        """This function is a login function which logs our customers in whom have
+        already created an account with the interface"""
+        df = pd.read_csv('customer_accounts.csv') #load our dataframe
+        df_k = df.loc[df['Account Number']==account_num] # create a new dataframe with our row of interest
+        if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num:
+            self.account = account_num
+            self.pin = pin_num
+            self.name = df_k['Name']
+            self.age = df_k['Age']
+            self.balance = df_k['Balance']
+        # above, we use a numpy array to check if the account number and pin match our records
+            print('Login Successful! Welcome to the online bank interface ') #successful login 
+            return True
+        else:# if the pin number and account number do not match our records, then login has failed!
+            print('Login Failed! Please try again')
+            return False    
+    
         
         
 

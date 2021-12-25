@@ -6,7 +6,7 @@ Created on Fri Nov 19 12:54:31 2021
 @author: jackmather
 This file is to run the classes that I have implemented. 
 """
-from Customer_Account_Class import Customer_Action, Customer_Account,Savings_Account, Checking_Account, Freeze_Account
+from Customer_Account_Class import Customer_Action, Customer_Account,Savings_Account, Checking_Account, Freeze_Account, Login_User
 
 import pandas as pd
 import numpy as np
@@ -53,16 +53,6 @@ def menu(user):
             user.logout() #logs the user out, saving to csv file
             break
 
-def login(account_num,pin_num):
-    df = pd.read_csv('customer_accounts.csv')
-    df_k = df.loc[df['Account Number']==account_num]
-    if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num:
-        print('Login Successful! Welcome to the online bank interface ')
-        return True
-    else:
-        print('Login Failed! Please try again')
-        return False
-
 def main():
     while True:
         print("""
@@ -99,16 +89,11 @@ def main():
         elif num ==2:
             account_num = int(input('Please enter your Account Number: '))
             pin_num = int(input('Please enter your PIN:'))
-            login_user = login(account_num,pin_num)
+            user = Login_User(account_num,pin_num)
+            login_user = user.login(account_num,pin_num)
             if login_user == True:
-                df = pd.read_csv('customer_accounts.csv')
-                df_data = df.loc[df['Account Number']== account_num]
-                name1 = df_data['Name']
-                age1 = df_data['Age']
-                balance1 = df_data['Balance']
-                pin1 = df_data['PIN']
-                user1 = Customer_Action(name1,age1,balance1,pin1)
-                menu(user1)
+                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+                menu(user_customer_action)
         elif num == 3:
             choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
             if choice == 'Y':
