@@ -8,8 +8,6 @@ This file is to run the classes that I have implemented.
 """
 from Customer_Account_Class import Customer_Action, Customer_Account,Savings_Account, Checking_Account, Freeze_Account, Login_User
 
-import pandas as pd
-import numpy as np
 
 def menu(user):
     """This function acts as the way customers interact with the banking system

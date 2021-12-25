@@ -92,7 +92,7 @@ class Customer_Action(Customer_Account):
         The input is the amount the user wants to deposit into their account."""
         self.deposit_funds = deposit_funds 
         self.balance += self.deposit_funds#the balance of the user is now balance + deposit fund
-        time = datetime.datetime.now()
+        time = str(datetime.datetime.now())
         self.trans_history(deposit_funds,'deposit',time)
         print('Your new balance is £', self.balance) # new balance is stated
     
@@ -107,7 +107,7 @@ class Customer_Action(Customer_Account):
         else:
             self.balance -= self.withdraw_funds#the balance of the user is now 
             #balance - withdraw fund
-            time = datetime.datetime.now()
+            time = str(datetime.datetime.now())
             self.trans_history(withdraw_funds,'withdraw',time)
             print('Withdrawal successful! Your balance is now £' , self.balance, '.')
             # new balance is stated
@@ -121,7 +121,7 @@ class Customer_Action(Customer_Account):
             #and their balance must be higher than the amount they want to transfer
             self.withdraw(transfer_funds)
             receiver.deposit(transfer_funds)
-            time = datetime.datetime.now()
+            time = str(datetime.datetime.now())
             self.trans_history(transfer_funds,'transfer',time)
             print('Transfer successful! Your balance is now £', self.balance , '.')
             return True
@@ -185,13 +185,13 @@ class Customer_Action(Customer_Account):
     
     def trans_history(self, amount, trans_type, time):
         if trans_type == 'deposit':
-            data = ['Deposited £',amount,' at', time ,' balance is:',self.balance]
+            data = ['Deposited £'+str(amount)+' at '+ time +'. Balance is:'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'withdraw':
-            data = ['Withdrew £',amount,' at', time,' balance is:',self.balance]
+            data = ['Withdrew £'+str(amount)+' at '+time+'. Balance is:'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'transfer':
-            data = ['Transfered £',amount,' at', time,' balance is:',self.balance]
+            data = ['Transfered £'+ str(amount)+' at '+time+'. Balance is:'+str(self.balance)]
             self.transaction_history.append(data)
             
             
@@ -203,6 +203,10 @@ class Checking_Account(Customer_Action):
     
     def __init__(self,name,age,balance,pin):
         super().__init__(name,age,balance,pin)
+        self.name = name
+        self.age = age
+        self.balance = balance 
+        self.pin = pin 
         
     def deposit(self,deposit_funds):
         self.balance *= 1.1
