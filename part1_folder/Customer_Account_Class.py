@@ -35,12 +35,13 @@ import datetime
      #   return False
 
     
-
+list_of_dicts = []
 class Customer_Account:
     """This class allows users to show their details, create and freeze 
     their accounts """
     account_number = random.randint(1000000,9999999)
-    
+    account_dict={}
+    list_of_dicts=[]
     def __init__(self,name,age,balance,pin):
         """initialiser function for the variables"""
         self.name = str(name)
@@ -49,16 +50,16 @@ class Customer_Account:
         self.pin = int(pin)
         self.account = Customer_Account.account_number #creates a random integer
         Customer_Account.account_number += 1
-        Customer_Account.account_number!=Customer_Account.account_number 
+        Customer_Account.account_number!=Customer_Account.account_number
         # above customer account number cannot equal another persons
-        
-        
+    
     def showdetails(self):
         """This function shows the details of the user once logged in."""
         print('Name:',self.name)
         print('Age:',self.age)
         print('Account Number:',self.account)
-        print('PIN:',self.pin)# it is a simple print function 
+        print('PIN:',self.pin)
+        # it is a simple print function 
     
     def createaccount(self):
         """This function creates a users account and adds their information to
@@ -68,6 +69,12 @@ class Customer_Account:
              return
         data = [self.name,self.age,self.balance,self.account,self.pin] #contains all the account credentials of the user
         self.data = data
+        self.account_dict['Name']=self.name
+        self.account_dict['Age']=self.age
+        self.account_dict['Balance']=self.balance
+        self.account_dict['Account Number']=self.account
+        self.account_dict['PIN']=self.pin
+        self.list_of_dicts.append(self.account_dict)
         with open('customer_accounts.csv','a',encoding='UTF8') as f: #opened the file and can append new information
              write = csv.writer(f)
              write.writerow(self.data) #writes the new row in the csv 
@@ -177,21 +184,26 @@ class Customer_Action(Customer_Account):
     def logout(self):
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
+        self.account_dict['Name']=self.name
+        self.account_dict['Age']=self.age
+        self.account_dict['Account Number']=self.account
+        self.account_dict['PIN']=self.pin
+        self.account_dict['Balance']=self.balance
         df = pd.read_csv('customer_accounts.csv')
-        df.loc[df['Account Number']==self.account,'Balance']= self.balance
-        df.loc[df['Account Number']==self.account,'PIN']= self.pin
+        df.loc[df['Account Number']==self.account,'Balance'] = self.balance
+        df.loc[df['Account Number']==self.account,'PIN'] = self.pin
         df.to_csv('customer_accounts.csv',index=False)
         print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
         if trans_type == 'deposit':
-            data = ['Deposited £'+str(amount)+' at '+ time +'. Balance is:'+str(self.balance)]
+            data = ['Deposited £'+str(amount)+' at '+ time +'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'withdraw':
-            data = ['Withdrew £'+str(amount)+' at '+time+'. Balance is:'+str(self.balance)]
+            data = ['Withdrew £'+str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'transfer':
-            data = ['Transfered £'+ str(amount)+' at '+time+'. Balance is:'+str(self.balance)]
+            data = ['Transfered £'+ str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
             
             
@@ -245,6 +257,7 @@ class Freeze_Account(Customer_Account):
         print('Cannot Transfer Money! Account is frozen')
         return False
 
+
 class Login_User(Customer_Account):
     
     def __init__(self,account,pin):
@@ -267,8 +280,7 @@ class Login_User(Customer_Account):
             return True
         else:# if the pin number and account number do not match our records, then login has failed!
             print('Login Failed! Please try again')
-            return False    
-    
+            return False
         
         
 

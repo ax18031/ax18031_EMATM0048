@@ -88,9 +88,10 @@ def main():
             account_num = int(input('Please enter your Account Number: '))
             pin_num = int(input('Please enter your PIN:'))
             user = Login_User(account_num,pin_num)
-            login_user = user.login(account_num,pin_num)
-            if login_user == True:
-                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+            LOG = user.login(account_num,pin_num)
+            if LOG == True:
+                user_cust = Customer_Account(name,age,balance,user.pin)
+                user_customer_action = Customer_Action(user_cust.name,user_cust.age,user_cust.balance,user_cust.pin)
                 menu(user_customer_action)
         elif num == 3:
             choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
