@@ -73,15 +73,15 @@ def main():
             pin = int(input('Please enter your 4 digit PIN: '))
             user = Customer_Account(name,age,balance,pin)
             if account_type == 1:
-                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.pin)
+                user_customer_action = Customer_Action(user.name,user.age,user.balance,user.account,user.pin)
                 user_customer_action.createaccount()
                 menu(user_customer_action)
             elif account_type == 2:
-                user_checking = Checking_Account(user.name,user.age,user.balance,user.pin)
+                user_checking = Checking_Account(user.name,user.age,user.balance,user.account,user.pin)
                 user_checking.createaccount()
                 menu(user_checking)
             elif account_type == 3:
-                user_savings = Savings_Account(user.name,user.age,user.balance,user.pin)
+                user_savings = Savings_Account(user.name,user.age,user.balance,user.account,user.pin)
                 user_savings.createaccount()
                 menu(user_savings)
         elif num ==2:
@@ -90,9 +90,9 @@ def main():
             user = Login_User(account_num,pin_num)
             LOG = user.login(account_num,pin_num)
             if LOG == True:
-                user_cust = Customer_Account(name,age,balance,user.pin)
-                user_customer_action = Customer_Action(user_cust.name,user_cust.age,user_cust.balance,user_cust.pin)
-                menu(user_customer_action)
+                us = Customer_Account(user.name,user.age,user.balance,user.pin)
+                user_login = Customer_Action(us.name,us.age,us.balance,us.account,us.pin)
+                menu(user_login)
         elif num == 3:
             choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
             if choice == 'Y':
@@ -101,7 +101,7 @@ def main():
                 balance2 = float(input('Please enter your current balance: '))
                 account2 = int(input('Please enter your account number: '))
                 pin2 = int(input('Please enter your 4 digit PIN: '))
-                user2 = Freeze_Account(name2,age2,balance2,pin2)
+                user2 = Freeze_Account(name2,age2,balance2,account2,pin2)
                 user2.Customer_Account(account2,pin2)
             elif choice == 'N':
                 print('Thank you! Your account has not been frozen.') 

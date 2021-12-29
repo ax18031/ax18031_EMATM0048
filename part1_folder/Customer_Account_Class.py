@@ -56,8 +56,11 @@ class Customer_Account:
     def showdetails(self):
         """This function shows the details of the user once logged in."""
         print('Name:',self.name)
+        
         print('Age:',self.age)
+        
         print('Account Number:',self.account)
+        
         print('PIN:',self.pin)
         # it is a simple print function 
     
@@ -89,9 +92,13 @@ class Customer_Action(Customer_Account):
     deposits, transfers. It is the child class of Customer_Account, so inheritance
     is used in this class."""
     
-    def __init__(self,name,age,balance,pin):
+    def __init__(self,name,age,balance,account,pin):
         """This function initialises the class"""
-        super().__init__(name,age,balance,pin)
+        self.name = name
+        self.age = age
+        self.balance = balance
+        self.account = account
+        self.pin = pin
         self.transaction_history = []
     
     def deposit(self,deposit_funds):
@@ -120,29 +127,38 @@ class Customer_Action(Customer_Account):
             # new balance is stated
     
     
-    def transfer(self,transfer_funds,receiver):
+    def transfer(self,transfer_funds, account):
         """This function allows user to transfer money from their bank account
         into another users bank account up to £1000. The input is the amount 
         the user wants to transfer and the account number of the transferee."""
-        if transfer_funds < 1000 and self.balance>transfer_funds: #restricted to £1000 
+        df = pd.read_csv('customer_accounts.csv') #load our dataframe
+        df_k = df.loc[df['Account Number']==account] # create a new dataframe with our row of interest
+        if np.array(df_k['Account Number'])== account:
+            name = df_k['Name']
+            age = df_k['Age']
+            balance = df_k['Balance']
+            account = account 
+            pin = df_k['PIN']
+            user_account = Customer_Action(name,age,balance,account,pin)
+            if transfer_funds < 1000 and self.balance > transfer_funds: #restricted to £1000 
             #and their balance must be higher than the amount they want to transfer
-            self.withdraw(transfer_funds)
-            receiver.deposit(transfer_funds)
-            time = str(datetime.datetime.now())
-            self.trans_history(transfer_funds,'transfer',time)
-            print('Transfer successful! Your balance is now £', self.balance , '.')
-            return True
-        elif self.balance < self.transfer_funds: #balance less than the amount they want to transfer
-            print('Insufficient funds to withdraw. Please try again!')
-            return False
-        elif self.transfer_funds < 0: #no negative numbers
-            print('Cannot transfer negative amounts!')
-            return False
-        elif self.transfer_funds>1000: #can't transfer over £1000
-            print('Transfer unsuccessful! Amount exceeds limit of £1000.')
-            return False
-        else:
-            return False
+                self.balance -= transfer_funds
+                user_account.balance += transfer_funds
+                time = str(datetime.datetime.now())
+                self.trans_history(transfer_funds,'transfer',time)
+                print('Transfer successful! Your balance is now £', self.balance , '.')
+                return True
+            elif self.balance < self.transfer_funds: #balance less than the amount they want to transfer
+                print('Insufficient funds to withdraw. Please try again!')
+                return False
+            elif self.transfer_funds < 0: #no negative numbers
+                print('Cannot transfer negative amounts!')
+                return False
+            elif self.transfer_funds>1000: #can't transfer over £1000
+                print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+                return False
+            else:
+                return False
         
     
     def changePIN(self):
@@ -186,13 +202,17 @@ class Customer_Action(Customer_Account):
         in the csv file which we keep all the information stored into our system"""
         self.account_dict['Name']=self.name
         self.account_dict['Age']=self.age
-        self.account_dict['Account Number']=self.account
         self.account_dict['PIN']=self.pin
+        self.account_dict['Account Number']=self.account
         self.account_dict['Balance']=self.balance
         df = pd.read_csv('customer_accounts.csv')
         df.loc[df['Account Number']==self.account,'Balance'] = self.balance
         df.loc[df['Account Number']==self.account,'PIN'] = self.pin
         df.to_csv('customer_accounts.csv',index=False)
+        
+        
+        
+        
         print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
@@ -208,38 +228,49 @@ class Customer_Action(Customer_Account):
             
             
     def show_history(self):
+        """Shows the transaction history of a user"""
         print(self.transaction_history)
         
         
 class Checking_Account(Customer_Action):
+    """Class contains functions related to checking accounts. This means that
+    when a user deposits money there balance increases by 10%."""
     
-    def __init__(self,name,age,balance,pin):
-        super().__init__(name,age,balance,pin)
+    def __init__(self,name,age,balance,account,pin):
+        """Initialises the function from Customer Action class"""
         self.name = name
         self.age = age
-        self.balance = balance 
+        self.balance = balance
+        self.account=account
         self.pin = pin 
         
     def deposit(self,deposit_funds):
+        """When the user deposits it uses this function instead of the other 
+        deposit function"""
         self.balance *= 1.1
         Customer_Action.deposit(self,deposit_funds)
         
 class Savings_Account(Customer_Action):
+    """Class contains functions related to savings accounts. This means that 
+    when a user withdraws or transfers money there is a fee associated with that
+    action."""
     
-    def __init__(self,name,age,balance,pin):
-        super().__init__(name,age,balance,pin)
-        self.fee = 0.1*self.balance
+    def __init__(self,name,age,balance,account,pin):
+        super().__init__(name,age,balance,account,pin)
+        self.fee = 0.1*self.balance # we set the fee at 10% of the balance
         
     def withdraw(self,withdraw_funds):
-        w = withdraw_funds+self.fee
-        Customer_Action.withdraw(self,w)
+        w = withdraw_funds+self.fee #we add the fee onto the withdrawal
+        Customer_Action.withdraw(self,w) #we perform the Customer_Action withdraw function
         
     def transfer(self,transfer_funds,receiver):
-        n = transfer_funds + self.fee
-        Customer_Action.transfer(self,n,receiver)
+        n = transfer_funds + self.fee #we add the fee onto the transfer fee
+        Customer_Action.transfer(self,n,receiver) #we perform the Customer_Action transfer function
 
 
 class Freeze_Account(Customer_Account):
+    """This class contains functions related to a customer who has frozen their
+    account. This means that this customer cannot login or receive transfers."""
     
     def __init__(self,name,age,balance,pin):
         self.name = name
@@ -248,18 +279,18 @@ class Freeze_Account(Customer_Account):
         self.pin = pin
     
     def login(self,account_num,pin_num):
-        Login_User.login == False
+        Login_User.login == False # this function no longer can work for a customer of this type.
         print('Cannot Login since account is frozen')
         return False
     
     def transfer(self,transfer_funds,receiver):
-        Customer_Action.transfer(transfer_funds,receiver)== False 
+        Customer_Action.transfer(transfer_funds,receiver)== False #this function can no longer work for a customer of this type.
         print('Cannot Transfer Money! Account is frozen')
         return False
 
 
-class Login_User(Customer_Account):
-    
+class Login_User(Customer_Action):
+    """This class helps users login to the banking system."""
     def __init__(self,account,pin):
         self.account = account
         self.pin = pin
