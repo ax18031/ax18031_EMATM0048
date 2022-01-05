@@ -35,13 +35,11 @@ import datetime
      #   return False
 
     
-list_of_dicts = []
+
 class Customer_Account:
     """This class allows users to show their details, create and freeze 
     their accounts """
     account_number = random.randint(1000000,9999999)
-    account_dict={}
-    list_of_dicts=[]
     def __init__(self,name,age,balance,pin):
         """initialiser function for the variables"""
         self.name = str(name)
@@ -55,7 +53,8 @@ class Customer_Account:
     
     def showdetails(self):
         """This function shows the details of the user once logged in."""
-        print('Name:',self.name)
+        n = len(self.name)
+        print('Name:',self.name[2:n-2])
         
         print('Age:',self.age)
         
@@ -72,12 +71,6 @@ class Customer_Account:
              return
         data = [self.name,self.age,self.balance,self.account,self.pin] #contains all the account credentials of the user
         self.data = data
-        self.account_dict['Name']=self.name
-        self.account_dict['Age']=self.age
-        self.account_dict['Balance']=self.balance
-        self.account_dict['Account Number']=self.account
-        self.account_dict['PIN']=self.pin
-        self.list_of_dicts.append(self.account_dict)
         with open('customer_accounts.csv','a',encoding='UTF8') as f: #opened the file and can append new information
              write = csv.writer(f)
              write.writerow(self.data) #writes the new row in the csv 
@@ -166,14 +159,14 @@ class Customer_Action(Customer_Account):
         p = int(input('Enter your current PIN: ')) #current pin 
         if p == self.pin: #checks if it is correct
             t = int(input('Enter your new PIN: '))#new pin
-            if t!=self.pin:#checks it doesn't equal their old pin 
-                self.pin = t #assigns self.pin to t
-                print('Successfully updated your PIN! Your new PIN number is', self.pin)#successfully changed
-            else:
-                print('You have entered the sane PIN as before, Please enter a new one!')
-                #lets users know they have entered their old pin
+            if t!=self.pin:
+                self.pin = t # updates self.pin to t
+                print('Successfully changed PIN! Your new pin is ',self.pin) #success message, self.pin updated
+            elif t==self.pin:
+                print('You have entered your old PIN! Please try again!') #stops users from using their old pin as new
+                return
         else:
-            print('Incorrect PIN provided! Please try again!') #wrong pin 
+            print('Incorrect PIN! Please try again') #wrong pin given at beginning 
     
         
     
@@ -200,19 +193,10 @@ class Customer_Action(Customer_Account):
     def logout(self):
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
-        self.account_dict['Name']=self.name
-        self.account_dict['Age']=self.age
-        self.account_dict['PIN']=self.pin
-        self.account_dict['Account Number']=self.account
-        self.account_dict['Balance']=self.balance
-        df = pd.read_csv('customer_accounts.csv')
-        df.loc[df['Account Number']==self.account,'Balance'] = self.balance
-        df.loc[df['Account Number']==self.account,'PIN'] = self.pin
-        df.to_csv('customer_accounts.csv',index=False)
-        
-        
-        
-        
+        df = pd.read_csv('customer_accounts.csv') #load our dataframe
+        df.loc[df['Account Number']==self.account,'Balance']= self.balance
+        df[df.loc[df['Account Number']==self.account]['PIN']]=self.pin
+        df.to_csv('customer_accounts.csv', index = False)
         print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
@@ -220,7 +204,7 @@ class Customer_Action(Customer_Account):
             data = ['Deposited £'+str(amount)+' at '+ time +'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'withdraw':
-            data = ['Withdrew £'+str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
+            data = ['Withdrawn £'+str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
         elif trans_type == 'transfer':
             data = ['Transfered £'+ str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
@@ -268,14 +252,15 @@ class Savings_Account(Customer_Action):
         Customer_Action.transfer(self,n,receiver) #we perform the Customer_Action transfer function
 
 
-class Freeze_Account(Customer_Account):
+class Freeze_Account(Customer_Action):
     """This class contains functions related to a customer who has frozen their
     account. This means that this customer cannot login or receive transfers."""
     
-    def __init__(self,name,age,balance,pin):
+    def __init__(self,name,age,balance,account,pin):
         self.name = name
         self.age = age
         self.balance = balance
+        self.account = account
         self.pin = pin
     
     def login(self,account_num,pin_num):
@@ -292,8 +277,8 @@ class Freeze_Account(Customer_Account):
 class Login_User(Customer_Action):
     """This class helps users login to the banking system."""
     def __init__(self,account,pin):
-        self.account = account
-        self.pin = pin
+        self.account=account
+        self.pin=pin
     
     def login(self,account_num,pin_num):
         """This function is a login function which logs our customers in whom have
@@ -303,15 +288,17 @@ class Login_User(Customer_Action):
         if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num:
             self.account = account_num
             self.pin = pin_num
-            self.name = df_k['Name']
-            self.age = df_k['Age']
-            self.balance = df_k['Balance']
+            self.name = np.array((df_k['Name']))
+            self.age = np.array(df_k['Age'])
+            self.balance = np.array(df_k['Balance'])
         # above, we use a numpy array to check if the account number and pin match our records
             print('Login Successful! Welcome to the online bank interface ') #successful login 
             return True
         else:# if the pin number and account number do not match our records, then login has failed!
             print('Login Failed! Please try again')
             return False
+
+        
         
         
 

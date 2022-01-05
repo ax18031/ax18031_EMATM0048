@@ -24,7 +24,8 @@ def menu(user):
               5. Check account details
               6. Change your PIN
               7. Transaction History
-              8. Logout
+              8. Freeze Account
+              9. Logout
               ==========================
               """)
         num1 = int(input('Enter a number to select an option: ')) #user inputs a number to access a service
@@ -36,7 +37,7 @@ def menu(user):
             user.withdraw(withdraw_funds)
         if int(num1)==3 and user != None:
             transfer_funds = float(input('Enter the amount you would like to transfer: '))#transfer
-            receiver = int(input('Enter the account number of the person you would like to transfer to.'))
+            receiver = int(input('Enter the account number of the person you would like to transfer to: '))
             user.transfer(transfer_funds,receiver)
         if int(num1)==4 and user != None:
             user.getBalance()#retrieve balance
@@ -47,9 +48,14 @@ def menu(user):
             user.changePIN() #allows a user to change their pin
         if int(num1)==7 and user!= None:
             user.show_history() #shows transaction history for a user
-        if int(num1)==8:
+        if int(num1)==9:
             user.logout() #logs the user out, saving to csv file
             break
+                
+           # elif choice == 'N':
+            #    print('Thank you! Your account has not been frozen.') 
+             #   return 
+
 
 def main():
     while True:
@@ -94,18 +100,24 @@ def main():
                 user_login = Customer_Action(us.name,us.age,us.balance,us.account,us.pin)
                 menu(user_login)
         elif num == 3:
-            choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
-            if choice == 'Y':
-                name2 = str(input('Please enter the name on the account you wish to freeze: '))
-                age2 = int(input('Please enter your age: '))
-                balance2 = float(input('Please enter your current balance: '))
-                account2 = int(input('Please enter your account number: '))
-                pin2 = int(input('Please enter your 4 digit PIN: '))
-                user2 = Freeze_Account(name2,age2,balance2,account2,pin2)
-                user2.Customer_Account(account2,pin2)
-            elif choice == 'N':
-                print('Thank you! Your account has not been frozen.') 
-                return 
+            accountl = int(input('Please enter your account number: '))
+            pinl = int(input('Please enter your PIN number: '))
+            user = Login_User(accountl,pinl)
+            LOG = user.login(accountl,pinl)
+            if LOG == True:
+                choice = str(input('Do you still wish to freeze your account? Type (Y/N)'))
+                if choice == 'Y':
+                    us = Customer_Action(user.name,user.age,user.balance,user.account,user.pin)
+                    user_freeze = Freeze_Account(us.name,us.age,us.balance,us.account,us.pin)
+                    menu(user_freeze)
+                #name2 = str(input('Please enter the name on the account you wish to freeze: '))
+                #age2 = int(input('Please enter your age: '))
+                #balance2 = float(input('Please enter your current balance: '))
+                #account2 = int(input('Please enter your account number: '))
+                #pin2 = int(input('Please enter your 4 digit PIN: '))
+                #user2 = Freeze_Account(name2,age2,balance2,account2,pin2)
+                #user2.login(account2,pin2)
+
                 
  
 main()               
