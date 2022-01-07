@@ -191,10 +191,9 @@ class Customer_Action(Customer_Account):
         return print('The name under your account is ',self.name)
     
     def logout(self):
-
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
-       # df=pd.read_csv('customer_accounts.csv')
+        df=pd.read_csv('customer_accounts.csv')
         customer_list = []
         n = len(self.name)
         name = self.name[2:n-2]
@@ -206,13 +205,20 @@ class Customer_Action(Customer_Account):
         with open('customer_accounts.csv', 'r') as f:
             reader = csv.reader(f)
             customer_list.extend(reader)
-        row_change = {37 : data }
-        with open('customer_accounts.csv', 'w') as f:
-            writer = csv.writer(f)
-            for line, row in enumerate(customer_list):
-                       d = row_change.get(line, row)
-                       writer.writerow(d)
-                       f.close
+        i = df.index
+        j = df['Account Number'] == self.account
+        q = i[j]
+        l = q.tolist()
+        s = l[0]
+        row_change = {s+1: data}
+        if len(l)==1:
+            with open('customer_accounts.csv', 'w') as f:
+                writer = csv.writer(f)
+                for line, row in enumerate(customer_list):
+                           d = row_change.get(line, row)
+                           writer.writerow(d)
+            print('Logout Successful! Goodbye')
+        else:
             print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
@@ -309,6 +315,34 @@ class Login_User(Customer_Action):
         else:# if the pin number and account number do not match our records, then login has failed!
             print('Login Failed! Please try again')
             return False
+    
+    def logout(self):
+        """ This function allows users to logout and updates their information 
+        in the csv file which we keep all the information stored into our system"""
+        df=pd.read_csv('customer_accounts.csv')
+        customer_list = []
+        n = len(self.name)
+        name = self.name[2:n-2]
+        age = self.age
+        balance = self.balance
+        account = self.account
+        pin = self.pin
+        data = [name,age,balance,account,pin]
+        with open('customer_accounts.csv', 'r') as f:
+            reader = csv.reader(f)
+            customer_list.extend(reader)
+        i = df.index
+        j = df['Account Number'] == self.account
+        q = i[j]
+        l = q.tolist()
+        s = l[0]
+        row_change = {s+1: data}
+        with open('customer_accounts.csv', 'w') as f:
+            writer = csv.writer(f)
+            for line, row in enumerate(customer_list):
+                       d = row_change.get(line, row)
+                       writer.writerow(d)
+            print('Logout Successful! Goodbye')
 
         
         
