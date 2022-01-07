@@ -97,7 +97,7 @@ def main():
             LOG = user.login(account_num,pin_num)
             if LOG == True:
                 us = Customer_Account(user.name,user.age,user.balance,user.pin)
-                user_login = Customer_Action(us.name,us.age,us.balance,us.account,us.pin)
+                user_login = Customer_Action(us.name,us.age,us.balance,account_num,us.pin)
                 menu(user_login)
 
                 

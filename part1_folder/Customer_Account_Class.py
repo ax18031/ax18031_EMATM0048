@@ -49,19 +49,7 @@ class Customer_Account:
         self.account = Customer_Account.account_number #creates a random integer
         Customer_Account.account_number += 1
         Customer_Account.account_number!=Customer_Account.account_number
-        # above customer account number cannot equal another persons
-    
-    def showdetails(self):
-        """This function shows the details of the user once logged in."""
-        n = len(self.name)
-        print('Name:',self.name[2:n-2])
-        
-        print('Age:',self.age)
-        
-        print('Account Number:',self.account)
-        
-        print('PIN:',self.pin)
-        # it is a simple print function 
+        # above customer account number cannot equal another persons 
     
     def createaccount(self):
         """This function creates a users account and adds their information to
@@ -93,6 +81,18 @@ class Customer_Action(Customer_Account):
         self.account = account
         self.pin = pin
         self.transaction_history = []
+    
+    def showdetails(self):
+        """This function shows the details of the user once logged in."""
+        n = len(self.name)
+        print('Name:',self.name[2:n-2])
+        
+        print('Age:',self.age)
+        
+        print('Account Number:',self.account)
+        
+        print('PIN:',self.pin)
+        # it is a simple print function 
     
     def deposit(self,deposit_funds):
         """This function allows users to depoit money into their bank account.
@@ -191,13 +191,29 @@ class Customer_Action(Customer_Account):
         return print('The name under your account is ',self.name)
     
     def logout(self):
+
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
-        df = pd.read_csv('customer_accounts.csv') #load our dataframe
-        df.loc[df['Account Number']==self.account,'Balance']= self.balance
-        df[df.loc[df['Account Number']==self.account]['PIN']]=self.pin
-        df.to_csv('customer_accounts.csv', index = False)
-        print('Logout Successful! Goodbye')
+       # df=pd.read_csv('customer_accounts.csv')
+        customer_list = []
+        n = len(self.name)
+        name = self.name[2:n-2]
+        age = self.age
+        balance = self.balance
+        account = self.account
+        pin = self.pin
+        data = [name,age,balance,account,pin]
+        with open('customer_accounts.csv', 'r') as f:
+            reader = csv.reader(f)
+            customer_list.extend(reader)
+        row_change = {37 : data }
+        with open('customer_accounts.csv', 'w') as f:
+            writer = csv.writer(f)
+            for line, row in enumerate(customer_list):
+                       d = row_change.get(line, row)
+                       writer.writerow(d)
+                       f.close
+            print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
         if trans_type == 'deposit':
@@ -222,11 +238,7 @@ class Checking_Account(Customer_Action):
     
     def __init__(self,name,age,balance,account,pin):
         """Initialises the function from Customer Action class"""
-        self.name = name
-        self.age = age
-        self.balance = balance
-        self.account=account
-        self.pin = pin 
+        super().__init__(name,age,balance,account,pin)
         
     def deposit(self,deposit_funds):
         """When the user deposits it uses this function instead of the other 
