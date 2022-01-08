@@ -21,8 +21,7 @@ import datetime
 
 
 class Customer_Account:
-    """This class allows users to show their details, create and freeze 
-    their accounts """
+    """This class allows users to create account and generates an account number """
     account_number = random.randint(1000000,9999999)
     def __init__(self,name,age,balance,pin):
         """initialiser function for the variables"""
