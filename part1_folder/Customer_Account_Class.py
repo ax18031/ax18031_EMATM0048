@@ -21,7 +21,7 @@ import datetime
 
 
 class Customer_Account:
-    """This class allows users to create an account and generates an account number for 
+    """This class allows users to show their details, create and freeze 
     their accounts """
     account_number = random.randint(1000000,9999999)
     def __init__(self,name,age,balance,pin):
@@ -81,27 +81,33 @@ class Customer_Action(Customer_Account):
     def deposit(self,deposit_funds):
         """This function allows users to depoit money into their bank account.
         The input is the amount the user wants to deposit into their account."""
-        self.deposit_funds = deposit_funds 
-        self.balance += self.deposit_funds#the balance of the user is now balance + deposit fund
-        time = str(datetime.datetime.now())
-        self.trans_history(deposit_funds,'deposit',time)
-        print('Your new balance is £', self.balance) # new balance is stated
+        if deposit_funds >= 0: 
+            self.deposit_funds = deposit_funds 
+            self.balance += self.deposit_funds#the balance of the user is now balance + deposit fund
+            time = str(datetime.datetime.now())
+            self.trans_history(deposit_funds,'deposit',time)
+            print('Your new balance is £', self.balance)# new balance is stated
+        else:
+            print('Cannot deposit negative amount.')
     
     
     def withdraw(self,withdraw_funds):
         """This function allows users to withdraw money from their bank account.
         The input is the amount the user wants to withdraw from their bank account."""
         self.withdraw_funds = withdraw_funds
-        if self.balance<self.withdraw_funds:#if their balance is lower than the 
-            #input then they don't have enough money to withdraw
-            return print('Insufficient funds to withdraw. Please try again!')
-        else:
-            self.balance -= self.withdraw_funds#the balance of the user is now 
-            #balance - withdraw fund
-            time = str(datetime.datetime.now())
-            self.trans_history(withdraw_funds,'withdraw',time)
-            print('Withdrawal successful! Your balance is now £' , self.balance, '.')
+        if withdraw_funds >=0:
+            if self.balance<self.withdraw_funds:#if their balance is lower than the 
+                #input then they don't have enough money to withdraw
+                return print('Insufficient funds to withdraw. Please try again!')
+            else:
+                self.balance -= self.withdraw_funds#the balance of the user is now 
+                #balance - withdraw fund
+                time = str(datetime.datetime.now())
+                self.trans_history(withdraw_funds,'withdraw',time)
+                print('Withdrawal successful! Your balance is now £' , self.balance, '.')
             # new balance is stated
+        else:
+            print('Cannot withdraw negative amount.')
     
     
     def transfer(self,transfer_funds, account):
@@ -117,24 +123,25 @@ class Customer_Action(Customer_Account):
             account = account 
             pin = df_k['PIN']
             user_account = Customer_Action(name,age,balance,account,pin)
-            if transfer_funds < 1000 and self.balance > transfer_funds: #restricted to £1000 
-            #and their balance must be higher than the amount they want to transfer
-                self.balance -= transfer_funds
-                user_account.balance += transfer_funds
-                time = str(datetime.datetime.now())
-                self.trans_history(transfer_funds,'transfer',time)
-                print('Transfer successful! Your balance is now £', self.balance , '.')
-                return True
-            elif self.balance < self.transfer_funds: #balance less than the amount they want to transfer
-                print('Insufficient funds to withdraw. Please try again!')
-                return False
-            elif self.transfer_funds < 0: #no negative numbers
-                print('Cannot transfer negative amounts!')
-                return False
-            elif self.transfer_funds>1000: #can't transfer over £1000
-                print('Transfer unsuccessful! Amount exceeds limit of £1000.')
-                return False
+            if transfer_funds>=0:
+                if transfer_funds < 1000:#restricted to between 0 and 1000
+                    if  self.balance > transfer_funds:#and their balance must be higher than the amount they want to transfer
+                        self.balance -= transfer_funds
+                        user_account.balance += transfer_funds
+                        time = str(datetime.datetime.now())
+                        self.trans_history(transfer_funds,'transfer',time)
+                        df.loc[df['Account Number']== account,'Balance']= user_account.balance
+                        df.to_csv('customer_accounts.csv',index=False)
+                        print('Transfer successful! Your balance is now £', self.balance , '.')
+                        return True
+                    else: #balance less than the amount they want to transfer
+                        print('Insufficient funds to transfer. Please try again!')
+                        return False
+                else: #can't transfer over £1000
+                    print('Transfer unsuccessful! Amount exceeds limit of £1000.')
+                    return False
             else:
+                print('Cannot transfer negative amounts!')
                 return False
         
     
