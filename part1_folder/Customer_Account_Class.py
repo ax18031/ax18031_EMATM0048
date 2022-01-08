@@ -20,22 +20,6 @@ import numpy as np
 import datetime
 
 
-
-#def login(account_num,pin_num):
- #   """This function is a login function which logs our customers in whom have
-  #  already created an account with the interface"""
-   # df = pd.read_csv('customer_accounts.csv') #load our dataframe
-    #df_k = df.loc[df['Account Number']==account_num] # create a new dataframe with our row of interest
-   # if np.array(df_k['PIN'])== pin_num and np.array(df_k['Account Number'])== account_num: 
-    #    # above, we use a numpy array to check if the account number and pin match our records
-     #   print('Login Successful! Welcome to the online bank interface ') #successful login 
-      #  return True
-   # else:# if the pin number and account number do not match our records, then login has failed!
-    #    print('Login Failed! Please try again')
-     #   return False
-
-    
-
 class Customer_Account:
     """This class allows users to show their details, create and freeze 
     their accounts """
