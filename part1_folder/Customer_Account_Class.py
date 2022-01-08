@@ -4,14 +4,14 @@
 Created on Fri Nov 19 11:11:43 2021
 
 @author: jackmather
-
-This file contains the customer account class. This class contains information
-about the customer such as name, age, etc... This class can:
-
-Login to the bank system, account number and PIN
-Transfer funds from their account to another valid account (up to £1000)
-Deposit funds
-Withdraw Funds
+Name: Jack Mather
+File Description: This file contains all the classes that I use in the main.py
+file for an online banking system created using Object Oriented Programming.
+The classes are Customer Account, Customer Action, Checking Account, Savings 
+Account, Freeze Account and Login User. The Parent Class of Customer Action is 
+Customer Account. Furthermore, Customer Action acts as the parent class of all 
+the remaining classes in the repository. More details about the individual 
+classes can be found on my GitHub repository in the Part1.md file.
 """
 import csv
 import random
@@ -255,7 +255,7 @@ class Checking_Account(Customer_Action):
     def deposit(self,deposit_funds):
         """When the user deposits it uses this function instead of the other 
         deposit function"""
-        self.balance *= 1.1
+        self.balance *= 1.1 #when they deposit money they get interest of 10% of their original balance
         Customer_Action.deposit(self,deposit_funds)
         
 class Savings_Account(Customer_Action):
