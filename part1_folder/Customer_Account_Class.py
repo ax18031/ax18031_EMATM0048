@@ -226,13 +226,15 @@ class Customer_Action(Customer_Account):
             print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
-        if trans_type == 'deposit':
+        """This function logs the transactions that occur in a session for a type
+        of customer."""
+        if trans_type == 'deposit': #records deposits
             data = ['Deposited £'+str(amount)+' at '+ time +'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
-        elif trans_type == 'withdraw':
+        elif trans_type == 'withdraw': #records withdrawals
             data = ['Withdrawn £'+str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
-        elif trans_type == 'transfer':
+        elif trans_type == 'transfer': #records transfers
             data = ['Transfered £'+ str(amount)+' at '+time+'. Balance is: £'+str(self.balance)]
             self.transaction_history.append(data)
             
