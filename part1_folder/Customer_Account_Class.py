@@ -194,31 +194,35 @@ class Customer_Action(Customer_Account):
         """ This function allows users to logout and updates their information 
         in the csv file which we keep all the information stored into our system"""
         df=pd.read_csv('customer_accounts.csv')
-        customer_list = []
-        n = len(self.name)
-        name = self.name[2:n-2]
+        customer_list = [] #empty list
+        n = len(self.name) 
+        name = self.name[2:n-2] # since name is np.array gets rid of [''] and leaves name
         age = self.age
         balance = self.balance
         account = self.account
         pin = self.pin
-        data = [name,age,balance,account,pin]
-        with open('customer_accounts.csv', 'r') as f:
-            reader = csv.reader(f)
-            customer_list.extend(reader)
+        data = [name,age,balance,account,pin] #uses data defined above
+        with open('customer_accounts.csv', 'r') as f: 
+            reader = csv.reader(f) #reads csv
+            customer_list.extend(reader) #adds information to the list
         i = df.index
-        j = df['Account Number'] == self.account
-        q = i[j]
-        l = q.tolist()
-        s = l[0]
-        row_change = {s+1: data}
-        if len(l)==1:
+        j = df['Account Number'] == self.account #condition
+        q = i[j] #set a condition to find the index of
+        l = q.tolist() # adds the index to list 
+        s = l[0] #list is of length 1, so want the first entry of the list 
+        if data in customer_list: #if data already exists, means not a new customer so the customer logged in
+            row_change = {s+1: data} #index of the row we want to overwrite with the information 
             with open('customer_accounts.csv', 'w') as f:
-                writer = csv.writer(f)
-                for line, row in enumerate(customer_list):
-                           d = row_change.get(line, row)
-                           writer.writerow(d)
+                writer = csv.writer(f) #how we are going to write the csv
+                for line, row in enumerate(customer_list): #for loop to find the line,row
+                           d = row_change.get(line, row) #define the new row
+                           writer.writerow(d) #write the new row
             print('Logout Successful! Goodbye')
-        else:
+        else: #customers who have just created account will use this section of the function 
+            df = pd.read_csv('customer_accounts.csv')
+            df.loc[df['Account Number']==self.account,'Balance']= self.balance #updated balance
+            df.loc[df['Account Number']==self.account,'PIN']= self.pin #updated pin 
+            df.to_csv('customer_accounts.csv',index=False) #write to the csv file without an index
             print('Logout Successful! Goodbye')
     
     def trans_history(self, amount, trans_type, time):
@@ -315,34 +319,6 @@ class Login_User(Customer_Action):
         else:# if the pin number and account number do not match our records, then login has failed!
             print('Login Failed! Please try again')
             return False
-    
-    def logout(self):
-        """ This function allows users to logout and updates their information 
-        in the csv file which we keep all the information stored into our system"""
-        df=pd.read_csv('customer_accounts.csv')
-        customer_list = []
-        n = len(self.name)
-        name = self.name[2:n-2]
-        age = self.age
-        balance = self.balance
-        account = self.account
-        pin = self.pin
-        data = [name,age,balance,account,pin]
-        with open('customer_accounts.csv', 'r') as f:
-            reader = csv.reader(f)
-            customer_list.extend(reader)
-        i = df.index
-        j = df['Account Number'] == self.account
-        q = i[j]
-        l = q.tolist()
-        s = l[0]
-        row_change = {s+1: data}
-        with open('customer_accounts.csv', 'w') as f:
-            writer = csv.writer(f)
-            for line, row in enumerate(customer_list):
-                       d = row_change.get(line, row)
-                       writer.writerow(d)
-            print('Logout Successful! Goodbye')
 
         
         
